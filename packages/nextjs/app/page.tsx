@@ -13,9 +13,7 @@ const Home: NextPage = () => {
   const [age, setAge] = useState<number | "">("");
   const [weight, setWeight] = useState<number | "">("");
   const [selectedValue, setSelectedValue] = useState("");
-  const [salary, setSalary] = useState<string>("");
-
-  const format = (val: string): string => `$${val}`;
+  const [salary, setSalary] = useState<number | "">("");
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -89,7 +87,7 @@ const Home: NextPage = () => {
             </div>
             <div>
               <p className="my-0 ml-3">Annual Salary</p>
-              <InputBase name="salary" placeholder="Enter annual salary" value={format(salary)} onChange={setSalary} />
+              <InputBase name="salary" placeholder="Enter annual salary" value={salary} onChange={setSalary} />
             </div>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
