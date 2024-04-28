@@ -65,6 +65,11 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "_covAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
               name: "_age",
               type: "uint256",
             },
@@ -75,7 +80,7 @@ const deployedContracts = {
             },
             {
               internalType: "uint256",
-              name: "_fitnessScore",
+              name: "_weight",
               type: "uint256",
             },
           ],
@@ -91,13 +96,7 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [
-            {
-              internalType: "address",
-              name: "_policyHolder",
-              type: "address",
-            },
-          ],
+          inputs: [],
           name: "claim",
           outputs: [],
           stateMutability: "nonpayable",
@@ -137,16 +136,6 @@ const deployedContracts = {
             },
             {
               internalType: "uint256",
-              name: "_endDate",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "_lateFee",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
               name: "_age",
               type: "uint256",
             },
@@ -157,7 +146,7 @@ const deployedContracts = {
             },
             {
               internalType: "uint256",
-              name: "_fitnessScore",
+              name: "_weight",
               type: "uint256",
             },
           ],
@@ -309,7 +298,7 @@ const deployedContracts = {
             },
             {
               internalType: "uint256",
-              name: "fitnessScore",
+              name: "weight",
               type: "uint256",
             },
           ],
@@ -363,13 +352,7 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [
-            {
-              internalType: "address",
-              name: "_policyHolder",
-              type: "address",
-            },
-          ],
+          inputs: [],
           name: "terminatePolicy",
           outputs: [],
           stateMutability: "nonpayable",
@@ -944,19 +927,30 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {
-        allowance: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        approve: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        balanceOf: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        decimals: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        decreaseAllowance: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        increaseAllowance: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        allowance:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        approve:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        balanceOf:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        decimals:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        decreaseAllowance:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        increaseAllowance:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
         name: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        symbol: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        totalSupply: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        transfer: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        transferFrom: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        symbol:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        totalSupply:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        transfer:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        transferFrom:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
         burn: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        burnFrom: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        burnFrom:
+          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
         DEFAULT_ADMIN_ROLE: "@openzeppelin/contracts/access/AccessControl.sol",
         getRoleAdmin: "@openzeppelin/contracts/access/AccessControl.sol",
         grantRole: "@openzeppelin/contracts/access/AccessControl.sol",
