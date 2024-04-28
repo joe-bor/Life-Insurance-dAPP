@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     LifeInsurance: {
-      address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+      address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
       abi: [
         {
           inputs: [
@@ -381,7 +381,7 @@ const deployedContracts = {
       },
     },
     LifeInsuranceToken: {
-      address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
       abi: [
         {
           inputs: [
@@ -944,30 +944,19 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {
-        allowance:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        approve:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        balanceOf:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        decimals:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        decreaseAllowance:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        increaseAllowance:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        allowance: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        approve: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        balanceOf: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        decimals: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        decreaseAllowance: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        increaseAllowance: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
         name: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        symbol:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        totalSupply:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        transfer:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        transferFrom:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        symbol: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        totalSupply: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        transfer: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        transferFrom: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
         burn: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
-        burnFrom:
-          "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+        burnFrom: "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
         DEFAULT_ADMIN_ROLE: "@openzeppelin/contracts/access/AccessControl.sol",
         getRoleAdmin: "@openzeppelin/contracts/access/AccessControl.sol",
         grantRole: "@openzeppelin/contracts/access/AccessControl.sol",
