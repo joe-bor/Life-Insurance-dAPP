@@ -1,13 +1,49 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Address } from "~~/components/scaffold-eth";
+import { Address, InputBase } from "~~/components/scaffold-eth";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
+  const [fullName, setFullName] = useState<string>("");
+  const [age, setAge] = useState<number | "">("");
+  const [weight, setWeight] = useState<number | "">("");
+  const [selectedValue, setSelectedValue] = useState("");
+  const [salary, setSalary] = useState<string>("");
+
+  const format = (val: string): string => `$${val}`;
+
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+
+    const formData = {
+      fullName,
+      age: Number(age) || null,
+      weight: Number(weight) || null,
+      selectedValue,
+      salary: Number(salary) || null,
+    };
+
+    console.log("this is the data:", formData);
+
+    // try {
+    //   const response = await fetch("", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(formData),
+    //   });
+    //   const result = await response.json();
+    //   console.log("Success:", result);
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
+  };
 
   return (
     <>
@@ -15,28 +51,53 @@ const Home: NextPage = () => {
         <div className="px-5">
           <h1 className="text-center">
             <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
+            <span className="block text-4xl font-bold">Solidity Insurance</span>
           </h1>
           <div className="flex justify-center items-center space-x-2">
             <p className="my-2 font-medium">Connected Address:</p>
             <Address address={connectedAddress} />
           </div>
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
+
+          <div className="flex flex-col gap-2">
+            <div>
+              <p className="my-0 ml-3">Name</p>
+              <InputBase name="fullName" placeholder="Enter full name" value={fullName} onChange={setFullName} />
+            </div>
+            <div className="flex flex-row gap-2">
+              <div>
+                <p className="my-0 ml-3">Age</p>
+                <InputBase name="age" placeholder="Enter age" value={age} onChange={setAge} />
+              </div>
+              <div>
+                <p className="my-0 ml-3">Weight (lbs)</p>
+                <InputBase name="weight" placeholder="Enter weight" value={weight} onChange={setWeight} />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <p className="my-0 ml-3">Are you a Tobacco User?</p>
+              <select
+                className={`bg-transparent border border-black text-gray-400 text-opacity-100 rounded-full min-h-9 px-4 ${
+                  selectedValue === "" ? "text-accent/50" : ""
+                }`}
+                value={selectedValue}
+                onChange={e => setSelectedValue(e.target.value)}
+              >
+                <option value="">Select an Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div>
+              <p className="my-0 ml-3">Annual Salary</p>
+              <InputBase name="salary" placeholder="Enter annual salary" value={format(salary)} onChange={setSalary} />
+            </div>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </div>
         </div>
 
         <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
