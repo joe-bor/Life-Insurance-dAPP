@@ -135,17 +135,6 @@ contract LifeInsurance is UsingTellor {
 			(basePremium * ageFactor * smokerFactor * fitnessFactor) / 1000000;
 	}
 
-	// function payPremium(address _policyHolder) public payable {
-	//     Policy storage policy = policies[_policyHolder];
-	//     require(policy.isActive, "Policy is not active");
-	//     require(msg.value == policy.monthlyPremium, "Incorrect premium amount");
-
-	//     uint256 commission = msg.value * COMMISSION_RATE / 100;
-	//     uint256 netPremium = msg.value - commission;
-	//     accumulateCommission(commission);
-
-	//     policy.dueDate += 30 days;
-	// }
 	function payPremium(
 		address _policyHolder
 	) public payable whenLifeInsuranceIsReady {
@@ -154,9 +143,8 @@ contract LifeInsurance is UsingTellor {
 
 		// Calculate the number of full 30-day periods that have passed since the due date
 		uint256 periodsLate = (block.timestamp - policy.dueDate) / 30 days;
-		uint256 totalDue = (policy.monthlyPremium * periodsLate) +
-			(policy.lateFee * periodsLate);
-
+		uint256 totalDue = periodsLate *
+			(policy.monthlyPremium + policy.lateFee);
 		// Require that the payment covers the total due (including all missed premiums and late fees)
 		require(
 			msg.value >= totalDue,
@@ -167,7 +155,6 @@ contract LifeInsurance is UsingTellor {
 		uint256 commission = (msg.value * COMMISSION_RATE) / 100;
 		// uint256 netPremium = msg.value - commission;
 		commissionCollectedTotal = commissionCollectedTotal + commission;
-		// accumulateCommission(commission);
 
 		// Adjust the due date: advance by the number of missed periods plus one for the current payment
 		policy.dueDate += (periodsLate + 1) * 30 days;
@@ -210,10 +197,9 @@ contract LifeInsurance is UsingTellor {
 	//     }
 	// }
 
-	function claim(address _policyHolder) public {
-		Policy storage policy = policies[_policyHolder];
+	function claim() public whenLifeInsuranceIsReady {
+		Policy storage policy = policies[msg.sender];
 		require(policy.isActive, "Policy is not active");
-		require(msg.sender == _policyHolder, "Only policyholder can claim");
 		// Additional claim logic here
 		// call oracle here - for now btc spot price
 		uint maxTime = 360 * 60 * 24 * 90;
@@ -223,7 +209,7 @@ contract LifeInsurance is UsingTellor {
 		payable(msg.sender).transfer(policy.coverageAmount);
 	}
 
-	function claimCommission() public {
+	function claimCommission() public whenLifeInsuranceIsReady {
 		uint256 amount = pendingWithdrawals[msg.sender];
 		require(amount > 0, "No commission to withdraw");
 
@@ -231,8 +217,8 @@ contract LifeInsurance is UsingTellor {
 		payable(msg.sender).transfer(amount);
 	}
 
-	function terminatePolicy(address _policyHolder) public {
-		policies[_policyHolder].isActive = false;
+	function terminatePolicy() public whenLifeInsuranceIsReady {
+		policies[msg.sender].isActive = false;
 	}
 
 	/// @notice Gives tokens based on the amount of ETH sent
