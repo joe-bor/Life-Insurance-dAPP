@@ -31,7 +31,7 @@ contract LifeInsurance is UsingTellor {
 	struct PolicyholderInfo {
 		uint age;
 		bool smoker;
-		uint fitnessScore;
+		uint weight;
 	}
 
 	mapping(address => Policy) public policies;
@@ -86,41 +86,50 @@ contract LifeInsurance is UsingTellor {
 	function createPolicy(
 		address _policyHolder,
 		uint256 _coverageAmount,
-		uint256 _endDate,
-		uint256 _lateFee,
 		uint _age,
 		bool _smoker,
-		uint _fitnessScore
+		uint _weight
 	) public whenLifeInsuranceIsReady {
-		uint256 premium = calculatePremium(_age, _smoker, _fitnessScore);
+		uint256 premium = calculatePremium(
+			_coverageAmount,
+			_age,
+			_smoker,
+			_weight
+		);
 
 		policies[_policyHolder] = Policy({
 			coverageAmount: _coverageAmount,
 			monthlyPremium: premium,
 			dueDate: block.timestamp + 30 days,
-			lateFee: _lateFee,
-			endDate: _endDate,
+			lateFee: (premium * 3) / 100, // 3% late fee
+			endDate: block.timestamp + ((365 days) * 25), // 25 yrs hardcoded
 			isActive: true
 		});
 
 		policyholders[_policyHolder] = PolicyholderInfo({
 			age: _age,
 			smoker: _smoker,
-			fitnessScore: _fitnessScore
+			weight: _weight
 		});
 	}
 
 	function calculatePremium(
+		uint256 _covAmount,
 		uint _age,
 		bool _smoker,
-		uint _fitnessScore
+		uint _weight
 	) public pure returns (uint256) {
-		uint basePremium = 1000000000000000; // Base premium in Wei 10^15
+		uint basePremium = _covAmount / 300; // 25 yrs - 12 months a year payments
+		// add 10% profit margin
+		basePremium = (basePremium * 11) / 10;
+		// less than 25 yrs 20% discount, upto 40 yrs no discount, upto 60 yrs 20% more, and after 60 50% more premium
 		uint ageFactor = _age < 25 ? 80 : _age < 40 ? 100 : _age < 60
 			? 120
 			: 150;
-		uint smokerFactor = _smoker ? 150 : 100;
-		uint fitnessFactor = 100 - (_fitnessScore - 1) * 10; // Decrease premium for higher fitness
+		uint smokerFactor = _smoker ? 120 : 100; // smoker pays 20% more
+		// 1 is lowest fitness and 10 is best fitness.
+		// max fitness 10 will get 18% discount.
+		uint fitnessFactor = 100 - (_weight - 1) * 2; // Decrease premium for higher fitness
 
 		return
 			(basePremium * ageFactor * smokerFactor * fitnessFactor) / 1000000;
