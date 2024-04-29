@@ -3,7 +3,7 @@
 import { formatEther, parseEther } from "viem";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
-function TestComponent() {
+async function TestComponent() {
   const TEST_ADDRESS = `${0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0}`;
 
   /*
@@ -44,7 +44,7 @@ function TestComponent() {
     functionName: "paymentToken",
   });
 
-  const { data: tokenBalance } = useScaffoldReadContract({
+  const { data: investorTokenBalance } = useScaffoldReadContract({
     contractName: "LifeInsurance",
     functionName: "investorTokenBalance",
     args: [TEST_ADDRESS],
@@ -67,6 +67,42 @@ function TestComponent() {
     functionName: "policyholders",
     args: [TEST_ADDRESS],
   });
+
+  // ---- WRITE HOOKS ----
+  const { writeContractAsync: claim } = useScaffoldWriteContract("LifeInsurance");
+  await claim({ functionName: "claim" });
+
+  const { writeContractAsync: claimCommission } = useScaffoldWriteContract("LifeInsurance");
+  await claimCommission({ functionName: "claimCommission" });
+
+  // TODO: change args to be dynamic -> should come from an input in the frontend
+  const { writeContractAsync: createPolicy } = useScaffoldWriteContract("LifeInsurance");
+  await createPolicy({
+    functionName: "createPolicy",
+    args: [
+      TEST_ADDRESS, // wallet address of person trying to get covered
+      1n, // coverage amount => will come from a form (dropdown)
+      30n, // age => form
+      false, // smoker => form
+      150n, // weight => form
+    ],
+  });
+
+  // TODO: change value to be dynamic -> should come from an input in the frontend
+  const { writeContractAsync: payPremium } = useScaffoldWriteContract("LifeInsurance");
+  await payPremium({ functionName: "payPremium", args: [TEST_ADDRESS], value: 1n });
+
+  // TODO: change value to be dynamic -> should come from an input in the frontend
+  const { writeContractAsync: purchaseTokens } = useScaffoldWriteContract("LifeInsurance");
+  await purchaseTokens({ functionName: "purchaseTokens", value: 1n });
+
+  // TODO: change args to be dynamic -> should come from an input in the frontend
+  const { writeContractAsync: returnTokens } = useScaffoldWriteContract("LifeInsurance");
+  await returnTokens({ functionName: "returnTokens", args: [1n] });
+
+  const { writeContractAsync: terminatePolicy } = useScaffoldWriteContract("LifeInsurance");
+  await terminatePolicy({ functionName: "terminatePolicy" });
+  // --------------------------------
 
   if (isLoading) return <p>Loading...</p>;
   if (threshold) return <p>Threshold: {formatEther(threshold)}</p>;
