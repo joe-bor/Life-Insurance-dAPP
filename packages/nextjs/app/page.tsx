@@ -102,7 +102,7 @@ const Home: NextPage = () => {
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
               <div className="mb-8">
                 <h3 className="text-2xl font-semibold text-white">Bronze</h3>
-                <p className="mt-4 text-gray-400">Get started with our basic coverage.</p>
+                <p className="mt-4 text-gray-400">Basic coverage.</p>
               </div>
               <div className="mb-8">
                 <span className="text-5xl font-extrabold text-white">$0</span>
@@ -117,7 +117,7 @@ const Home: NextPage = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                   <span>single coverage</span>
                 </li>
@@ -129,7 +129,7 @@ const Home: NextPage = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                   <span>sample perk</span>
                 </li>
@@ -141,7 +141,7 @@ const Home: NextPage = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Basic support</span>
                 </li>
@@ -173,7 +173,7 @@ const Home: NextPage = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Coverage for 4 people</span>
                 </li>
@@ -185,7 +185,7 @@ const Home: NextPage = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                   <span>sample perk</span>
                 </li>
@@ -197,7 +197,7 @@ const Home: NextPage = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Standard support</span>
                 </li>
@@ -229,9 +229,9 @@ const Home: NextPage = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>Unlimited coverage for the entire bloodline</span>
+                  <span>Unlimited coverage</span>
                 </li>
                 <li className="flex items-center">
                   <svg
@@ -241,7 +241,7 @@ const Home: NextPage = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Unlimited transactions</span>
                 </li>
@@ -253,7 +253,7 @@ const Home: NextPage = () => {
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Priority support</span>
                 </li>
