@@ -17,7 +17,7 @@ async function TestComponent() {
 
   */
 
-  // ------------- INSURANCE  READS -------------
+  // ------------- Read Hooks for Life Insurance Contract -------------
   const {
     data: threshold,
     isLoading,
@@ -68,7 +68,7 @@ async function TestComponent() {
     args: [TEST_ADDRESS],
   });
 
-  // ---- WRITE HOOKS ----
+  // ---- WRITE HOOKS for Life Insurance Contract ----
   const { writeContractAsync: claim } = useScaffoldWriteContract("LifeInsurance");
   await claim({ functionName: "claim" });
 
@@ -102,8 +102,41 @@ async function TestComponent() {
 
   const { writeContractAsync: terminatePolicy } = useScaffoldWriteContract("LifeInsurance");
   await terminatePolicy({ functionName: "terminatePolicy" });
-  // --------------------------------
 
+  // ------- Read Hooks for Token Contract ----------
+
+  // const { data: paymentTokenAddress } = useScaffoldReadContract({
+  //   contractName: "LifeInsurance",
+  //   functionName: "paymentToken",
+  // });
+
+  const { data: paymentTokenName } = useScaffoldReadContract({
+    contractName: "LifeInsuranceToken",
+    functionName: "name",
+  });
+
+  const { data: paymentTokenSymbol } = useScaffoldReadContract({
+    contractName: "LifeInsuranceToken",
+    functionName: "symbol",
+  });
+
+  const { data: paymentTokenTotalSupply } = useScaffoldReadContract({
+    contractName: "LifeInsuranceToken",
+    functionName: "totalSupply",
+  });
+
+  // TODO: change args to be dynamic, coming from the frontend
+  const { data: addressTokenBalance } = useScaffoldReadContract({
+    contractName: "LifeInsuranceToken",
+    functionName: "balanceOf",
+    args: [TEST_ADDRESS],
+  });
+
+  // ----- Write Hooks for Payment Token ----
+  const { writeContractAsync: grantMyselfMinterRole } = useScaffoldWriteContract("LifeInsuranceToken");
+  await grantMyselfMinterRole({ functionName: "grantMyselfMinterRole" });
+
+  // Return JSX
   if (isLoading) return <p>Loading...</p>;
   if (threshold) return <p>Threshold: {formatEther(threshold)}</p>;
 }
