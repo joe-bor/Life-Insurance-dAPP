@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address, InputBase } from "~~/components/scaffold-eth";
 
 const Home: NextPage = () => {
@@ -45,7 +43,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      {/* <div className="flex items-center flex-col flex-grow pt-10">
+      <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5">
           <h1 className="text-center">
             <span className="block text-2xl mb-2">Welcome to</span>
@@ -93,36 +91,183 @@ const Home: NextPage = () => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
               onClick={handleSubmit}
             >
-              Submit
+              Create Policy
             </button>
           </div>
         </div>
 
         <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+            {/* <!-- Bronze Plan --> */}
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+              <div className="mb-8">
+                <h3 className="text-2xl font-semibold text-white">Bronze</h3>
+                <p className="mt-4 text-gray-400">Get started with our basic coverage.</p>
+              </div>
+              <div className="mb-8">
+                <span className="text-5xl font-extrabold text-white">$0</span>
+                <span className="text-xl font-medium text-gray-400">/mo</span>
+              </div>
+              <ul className="mb-8 space-y-4 text-gray-400">
+                <li className="flex items-center">
+                  <svg
+                    className="h-6 w-6 text-green-500 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>single coverage</span>
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    className="h-6 w-6 text-green-500 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>sample perk</span>
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    className="h-6 w-6 text-green-500 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Basic support</span>
+                </li>
+              </ul>
+              <a
+                href="#"
+                className="block w-full py-3 px-6 text-center rounded-md text-white font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+              >
+                Sign Up
+              </a>
             </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
+
+            {/* <!-- Starter Plan --> */}
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+              <div className="mb-8">
+                <h3 className="text-2xl font-semibold text-white">Silver</h3>
+                <p className="mt-4 text-gray-400">Perfect for families.</p>
+              </div>
+              <div className="mb-8">
+                <span className="text-5xl font-extrabold text-white">$49</span>
+                <span className="text-xl font-medium text-gray-400">/mo</span>
+              </div>
+              <ul className="mb-8 space-y-4 text-gray-400">
+                <li className="flex items-center">
+                  <svg
+                    className="h-6 w-6 text-green-500 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Coverage for 4 people</span>
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    className="h-6 w-6 text-green-500 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>sample perk</span>
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    className="h-6 w-6 text-green-500 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Standard support</span>
+                </li>
+              </ul>
+              <a
+                href="#"
+                className="block w-full py-3 px-6 text-center rounded-md text-white font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+              >
+                Get Started
+              </a>
+            </div>
+
+            {/* <!-- Gold Plan --> */}
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+              <div className="mb-8">
+                <h3 className="text-2xl font-semibold text-white">Gold</h3>
+                <p className="mt-4 text-gray-400">Ideal for complex scenarios</p>
+              </div>
+              <div className="mb-8">
+                <span className="text-5xl font-extrabold text-white">$99</span>
+                <span className="text-xl font-medium text-gray-400">/mo</span>
+              </div>
+              <ul className="mb-8 space-y-4 text-gray-400">
+                <li className="flex items-center">
+                  <svg
+                    className="h-6 w-6 text-green-500 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Unlimited coverage for the entire bloodline</span>
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    className="h-6 w-6 text-green-500 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Unlimited transactions</span>
+                </li>
+                <li className="flex items-center">
+                  <svg
+                    className="h-6 w-6 text-green-500 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Priority support</span>
+                </li>
+              </ul>
+              <a
+                href="#"
+                className="block w-full py-3 px-6 text-center rounded-md text-white font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+              >
+                Get Started
+              </a>
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </>
   );
 };
