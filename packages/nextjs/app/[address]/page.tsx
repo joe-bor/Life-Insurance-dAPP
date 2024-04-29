@@ -1,12 +1,12 @@
 "use client";
 
-import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { NextPage } from "next";
 import { formatEther, parseEther } from "viem";
-import { useBalance } from "wagmi";
+import { useBalance, useReadContract } from "wagmi";
 import { Address, Balance } from "~~/components/scaffold-eth";
-import { useScaffoldContract, useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
 const page: NextPage = () => {
   const params = useParams<{ address: string }>();
@@ -28,9 +28,24 @@ const page: NextPage = () => {
     functionName: "symbol",
   });
 
-  const { data: paymentTokenTotalSupply } = useScaffoldReadContract({
-    contractName: "LifeInsuranceToken",
+  const { data: totalSupply, refetch } = useReadContract({
+    address: paymentTokenAddress,
     functionName: "totalSupply",
+    abi: [
+      {
+        inputs: [],
+        name: "totalSupply",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+    ],
   });
 
   const { writeContractAsync: purchaseTokens, isMining, isPending } = useScaffoldWriteContract("LifeInsurance");
@@ -49,13 +64,14 @@ const page: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    if (insuranceAddress) {
+    if (totalSupply) {
       try {
+        refetch();
       } catch (error) {
         console.error(error);
       }
     }
-  }, []);
+  }, [totalSupply]);
 
   const handleBuyClick = async () => {
     try {
@@ -113,7 +129,7 @@ const page: NextPage = () => {
         <div className="divider divider-horizontal"></div>
         <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
           <div className="text-2xl font-medium">Supply</div>
-          <div>{formatEther(paymentTokenTotalSupply || 0n)}</div>
+          <div>{formatEther((totalSupply as bigint) || 0n)}</div>
         </div>
       </div>
 
