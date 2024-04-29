@@ -3,7 +3,7 @@
 import { formatEther, parseEther } from "viem";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
-async function TestComponent() {
+function TestComponent() {
   const TEST_ADDRESS = `${0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0}`;
 
   /*
@@ -70,14 +70,14 @@ async function TestComponent() {
 
   // ---- WRITE HOOKS for Life Insurance Contract ----
   const { writeContractAsync: claim } = useScaffoldWriteContract("LifeInsurance");
-  await claim({ functionName: "claim" });
+  claim({ functionName: "claim" });
 
   const { writeContractAsync: claimCommission } = useScaffoldWriteContract("LifeInsurance");
-  await claimCommission({ functionName: "claimCommission" });
+  claimCommission({ functionName: "claimCommission" });
 
   // TODO: change args to be dynamic -> should come from an input in the frontend
   const { writeContractAsync: createPolicy } = useScaffoldWriteContract("LifeInsurance");
-  await createPolicy({
+  createPolicy({
     functionName: "createPolicy",
     args: [
       TEST_ADDRESS, // wallet address of person trying to get covered
@@ -90,18 +90,18 @@ async function TestComponent() {
 
   // TODO: change value to be dynamic -> should come from an input in the frontend
   const { writeContractAsync: payPremium } = useScaffoldWriteContract("LifeInsurance");
-  await payPremium({ functionName: "payPremium", args: [TEST_ADDRESS], value: 1n });
+  payPremium({ functionName: "payPremium", args: [TEST_ADDRESS], value: 1n });
 
   // TODO: change value to be dynamic -> should come from an input in the frontend
   const { writeContractAsync: purchaseTokens } = useScaffoldWriteContract("LifeInsurance");
-  await purchaseTokens({ functionName: "purchaseTokens", value: 1n });
+  purchaseTokens({ functionName: "purchaseTokens", value: 1n });
 
   // TODO: change args to be dynamic -> should come from an input in the frontend
   const { writeContractAsync: returnTokens } = useScaffoldWriteContract("LifeInsurance");
-  await returnTokens({ functionName: "returnTokens", args: [1n] });
+  returnTokens({ functionName: "returnTokens", args: [1n] });
 
   const { writeContractAsync: terminatePolicy } = useScaffoldWriteContract("LifeInsurance");
-  await terminatePolicy({ functionName: "terminatePolicy" });
+  terminatePolicy({ functionName: "terminatePolicy" });
 
   // ------- Read Hooks for Token Contract ----------
 
@@ -134,7 +134,7 @@ async function TestComponent() {
 
   // ----- Write Hooks for Payment Token ----
   const { writeContractAsync: grantMyselfMinterRole } = useScaffoldWriteContract("LifeInsuranceToken");
-  await grantMyselfMinterRole({ functionName: "grantMyselfMinterRole" });
+  grantMyselfMinterRole({ functionName: "grantMyselfMinterRole" });
 
   // Return JSX
   if (isLoading) return <p>Loading...</p>;
