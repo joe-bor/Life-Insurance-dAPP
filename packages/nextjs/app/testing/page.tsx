@@ -1,3 +1,5 @@
+"use client";
+
 import { formatEther, parseEther } from "viem";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
@@ -66,10 +68,7 @@ function TestComponent() {
     args: [TEST_ADDRESS],
   });
 
-  return (
-    <>
-      {isLoading ? <p>Loading...</p> : formatEther(threshold!)} <p>Hello</p>
-    </>
-  );
+  if (isLoading) return <p>Loading...</p>;
+  if (threshold) return <p>Threshold: {formatEther(threshold)}</p>;
 }
 export default TestComponent;

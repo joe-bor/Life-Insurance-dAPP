@@ -6,7 +6,6 @@ import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address, InputBase } from "~~/components/scaffold-eth";
-import TestComponent from "~~/joe-testing/TestComponent";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
@@ -46,7 +45,6 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <TestComponent />
       {/* <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5">
           <h1 className="text-center">
