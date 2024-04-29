@@ -154,7 +154,7 @@ const Home: NextPage = () => {
               </a>
             </div>
 
-            {/* <!-- Starter Plan --> */}
+            {/* <!-- Silver Plan --> */}
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
               <div className="mb-8">
                 <h3 className="text-2xl font-semibold text-white">Silver</h3>
