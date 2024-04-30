@@ -6,7 +6,7 @@ import PolicyHolderInfo from "./PolicyHolderInfo";
 import RegisterCoverage from "./RegisterCoverage";
 import { NextPage } from "next";
 import { formatEther, parseEther } from "viem";
-import { useBalance, useReadContract } from "wagmi";
+import { useAccount, useBalance, useReadContract } from "wagmi";
 import { Address, Balance } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
@@ -15,6 +15,7 @@ const page: NextPage = () => {
   const [insuranceAddress, setInsuranceAddress] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [isInsuring, setIsInsuring] = useState(false);
+  const { address: connectedAddress } = useAccount();
 
   const { data: threshold } = useScaffoldReadContract({ contractName: "LifeInsurance", functionName: "THRESHOLD" });
 
@@ -62,6 +63,12 @@ const page: NextPage = () => {
     queryKey,
   } = useBalance({
     address: insuranceAddress,
+  });
+
+  const { data: policies } = useScaffoldReadContract({
+    contractName: "LifeInsurance",
+    functionName: "policies",
+    args: [connectedAddress],
   });
 
   useEffect(() => {
@@ -148,11 +155,8 @@ const page: NextPage = () => {
         </div>
       </div>
 
-      {/* This should be dynamically rendered, depends whether is it Funding or Investing phase*/}
-      {/* ---- Funding --- */}
-      {isInsuring ? (
-        <RegisterCoverage />
-      ) : (
+      {/* ---- Funding Phase --- */}
+      {!isInsuring && (
         <div className="card w-96 bg-base-100 shadow-xl m-4">
           <div className="card-body">
             <h2 className="card-title self-center">Buy Tokens!</h2>
@@ -173,10 +177,11 @@ const page: NextPage = () => {
         </div>
       )}
 
-      {/* ---- Investing ---  */}
-      {/* ----> Replace w/ Form to buy coverage <---  */}
+      {/* ---- Funded but address not registered --- */}
+      {isInsuring && !policies?.[5] && <RegisterCoverage />}
 
-      <PolicyHolderInfo />
+      {/* ---- Insured ---  */}
+      {connectedAddress && policies?.[5] && <PolicyHolderInfo />}
     </div>
   );
 };
