@@ -135,22 +135,22 @@ const page: NextPage = () => {
 
       <div className="flex w-8/12 m-4 ">
         <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-          <div className="text-2xl">Token Address</div>
+          <div className="text-2xl text-primary">Token Address</div>
           <Address address={paymentTokenAddress || ""} format="short" size="xs" />
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-          <div className="text-2xl">Token Name</div>
+          <div className="text-2xl text-secondary">Token Name</div>
           <div>{paymentTokenName}</div>
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-          <div className="text-2xl">Token Symbol</div>
+          <div className="text-2xl text-accent">Token Symbol</div>
           <div>{paymentTokenSymbol}</div>
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-          <div className="text-2xl font-medium">Supply</div>
+          <div className="text-2xl font-medium text-neutral">Supply</div>
           {totalSupply ? <div> {formatEther(totalSupply)} </div> : <div>0</div>}
         </div>
       </div>
