@@ -129,10 +129,9 @@ contract LifeInsurance is UsingTellor {
 		uint smokerFactor = _smoker ? 120 : 100; // smoker pays 20% more
 		// 1 is lowest fitness and 10 is best fitness.
 		// max fitness 10 will get 18% discount.
-		uint fitnessFactor = 100 - (_weight - 1) * 2; // Decrease premium for higher fitness
+		// uint fitnessFactor = 100 - (_weight - 1) * 2; // Decrease premium for higher fitness
 
-		return
-			(basePremium * ageFactor * smokerFactor * fitnessFactor) / 1000000;
+		return (basePremium * ageFactor * smokerFactor * _weight) / 1000000;
 	}
 
 	function payPremium(
