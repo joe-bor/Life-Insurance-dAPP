@@ -16,11 +16,7 @@ const page: NextPage = () => {
   const [inputValue, setInputValue] = useState("");
   const [isInsuring, setIsInsuring] = useState(false);
 
-  const {
-    data: threshold,
-    isLoading: isLoadingThreshold,
-    status,
-  } = useScaffoldReadContract({ contractName: "LifeInsurance", functionName: "THRESHOLD" });
+  const { data: threshold } = useScaffoldReadContract({ contractName: "LifeInsurance", functionName: "THRESHOLD" });
 
   const { data: paymentTokenName } = useScaffoldReadContract({
     contractName: "LifeInsuranceToken",

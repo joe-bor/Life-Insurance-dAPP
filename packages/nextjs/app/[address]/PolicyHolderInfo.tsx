@@ -54,8 +54,23 @@ const PolicyHolderInfo: NextPage = () => {
       weight: Number(policyHoldersData[2]), // Convert bigint to number
     };
   };
+  const transformPolicies = (
+    policiesData: any[] | readonly [bigint, bigint, bigint, bigint, bigint, boolean] | undefined,
+  ) => {
+    // Check if data is undefined before processing
+    if (!policiesData) return undefined;
 
-  // Assuming `policyHolders` is fetched from the hook
+    return {
+      coverageAmount: formatEther(policiesData[0]),
+      monthlyPremium: formatEther(policiesData[1]),
+      dueDate: new Date(Number(policiesData[2]) * 1000).toUTCString(), // Convert UNIX timestamp to ISO string
+      lateFee: formatEther(policiesData[3]),
+      endDate: new Date(Number(policiesData[4]) * 1000).toUTCString(), // Convert UNIX timestamp to ISO string
+      isActive: policiesData[5],
+    };
+  };
+
+  const transformedPolicies = transformPolicies(policies);
   const transformedPolicyHolders = transformPolicyHolders(policyHolders);
 
   return (
@@ -74,6 +89,9 @@ const PolicyHolderInfo: NextPage = () => {
                 <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
               </div>
             </div>
+            <div className="stat-desc text-secondary mx-3">
+              {transformedPolicies?.isActive ? "Active" : "Terminated"}
+            </div>
           </div>
 
           <div className="stat-value m-2">Policy Holder Info</div>
@@ -81,11 +99,18 @@ const PolicyHolderInfo: NextPage = () => {
             <div className="stat-title">{transformedPolicyHolders?.age} yrs old</div>
             <div className="stat-title">{transformedPolicyHolders?.weight} lbs</div>
             {transformedPolicyHolders?.smoker ? (
-              <div className="stat-desc text-secondary">Smoker</div>
+              <div className="stat-title">Smoker</div>
             ) : (
-              <div className="stat-desc text-secondary">Non-smoker</div>
+              <div className="stat-title">Non-smoker</div>
             )}
           </div>
+          <div>
+            <div className="stat-desc text-secondary">Coverage: {transformedPolicies?.coverageAmount} ETH</div>
+            <div className="stat-desc text-secondary">Premium: {transformedPolicies?.monthlyPremium}/month</div>
+            <div className="stat-desc text-secondary">Due: {transformedPolicies?.dueDate}</div>
+          </div>
+
+          <div></div>
         </div>
       </div>
     </>

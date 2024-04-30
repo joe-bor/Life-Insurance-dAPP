@@ -76,11 +76,9 @@ const RegisterCoverage: NextComponentType = () => {
             value={coverage}
             onChange={e => setCoverage(e.target.value)}
           >
-            <option value="100" className="text-red-900">
-              Bronze
-            </option>
-            <option value="10000">Silver</option>
-            <option value="1000000">Gold</option>
+            <option value="1000000">Bronze</option>
+            <option value="1000000000">Silver</option>
+            <option value="1000000000000">Gold</option>
           </select>
         </div>
         <button
