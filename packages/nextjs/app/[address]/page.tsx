@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import PayPremium from "./PayPremium";
+import PolicyHolderInfo from "./PolicyHolderInfo";
 import RegisterCoverage from "./RegisterCoverage";
 import { NextPage } from "next";
 import { formatEther, parseEther } from "viem";
@@ -180,7 +180,7 @@ const page: NextPage = () => {
       {/* ---- Investing ---  */}
       {/* ----> Replace w/ Form to buy coverage <---  */}
 
-      <PayPremium />
+      <PolicyHolderInfo />
     </div>
   );
 };

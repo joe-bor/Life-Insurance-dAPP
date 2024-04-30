@@ -14,7 +14,7 @@ const blockieSizeMap = {
   "3xl": 15,
 };
 
-const PayPremium: NextPage = () => {
+const PolicyHolderInfo: NextPage = () => {
   const { address: connectedAddress } = useAccount();
 
   const { data: policies } = useScaffoldReadContract({
@@ -91,4 +91,4 @@ const PayPremium: NextPage = () => {
     </>
   );
 };
-export default PayPremium;
+export default PolicyHolderInfo;

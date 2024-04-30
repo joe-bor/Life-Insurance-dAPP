@@ -12,34 +12,28 @@ const RegisterCoverage: NextComponentType = () => {
   const [age, setAge] = useState<number | "">("");
   const [weight, setWeight] = useState<number | "">("");
   const [selectedValue, setSelectedValue] = useState("");
-  const [salary, setSalary] = useState<number | "">("");
+  const [coverage, setCoverage] = useState("");
+  const { address: connectedAddress } = useAccount();
+  const { writeContractAsync: createPolicy } = useScaffoldWriteContract("LifeInsurance");
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
-    const formData = {
-      fullName,
-      age: Number(age) || null,
-      weight: Number(weight) || null,
-      selectedValue,
-      salary: Number(salary) || null,
-    };
+    await createPolicy({
+      functionName: "createPolicy",
+      args: [
+        connectedAddress, // wallet address of person trying to get covered
+        BigInt(coverage), // coverage amount => will come from a form (dropdown)
+        BigInt(age),
+        Boolean(selectedValue),
+        BigInt(weight),
+      ],
+    });
 
-    console.log("this is the data:", formData);
-
-    // try {
-    //   const response = await fetch("", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(formData),
-    //   });
-    //   const result = await response.json();
-    //   console.log("Success:", result);
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
+    setFullName("");
+    setWeight("");
+    setSelectedValue("");
+    setCoverage("");
   };
 
   return (
@@ -69,13 +63,25 @@ const RegisterCoverage: NextComponentType = () => {
             onChange={e => setSelectedValue(e.target.value)}
           >
             <option value="">Select an Option</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
           </select>
         </div>
-        <div>
-          <p className="my-0 ml-3">Annual Salary</p>
-          <InputBase name="salary" placeholder="Enter annual salary" value={salary} onChange={setSalary} />
+        <div className="flex flex-col">
+          <p className="my-0 ml-3">Choose coverage</p>
+          <select
+            className={`bg-transparent border border-black text-gray-400 text-opacity-100 rounded-full min-h-9 px-4 ${
+              coverage === "" ? "text-accent/50" : ""
+            }`}
+            value={coverage}
+            onChange={e => setCoverage(e.target.value)}
+          >
+            <option value="100" className="text-red-900">
+              Bronze
+            </option>
+            <option value="10000">Silver</option>
+            <option value="1000000">Gold</option>
+          </select>
         </div>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
