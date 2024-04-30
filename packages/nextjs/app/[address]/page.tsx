@@ -112,7 +112,7 @@ const page: NextPage = () => {
     <div className="flex flex-col items-center justify-center gap-4 px-10 m-4">
       <div className="stats shadow m-6">
         <div className="stat place-items-center">
-          <div className="stat-title text-3xl">Insurance Contract Address</div>
+          <div className="stat-title">Insurance Contract Address</div>
           <Address address={insuranceAddress} format="short" size="sm" />
           {/* <div className="stat-value">31K</div>
           <div className="stat-desc">From January 1st to February 1st</div> */}
@@ -135,12 +135,12 @@ const page: NextPage = () => {
 
       <div className="flex w-8/12 m-4 ">
         <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-          <div className="text-2xl text-primary">Token Address</div>
+          <div className="text-2xl text-accent">Token Address</div>
           <Address address={paymentTokenAddress || ""} format="short" size="xs" />
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-          <div className="text-2xl text-secondary">Token Name</div>
+          <div className="text-2xl text-accent">Token Name</div>
           <div>{paymentTokenName}</div>
         </div>
         <div className="divider divider-horizontal"></div>
@@ -150,16 +150,16 @@ const page: NextPage = () => {
         </div>
         <div className="divider divider-horizontal"></div>
         <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
-          <div className="text-2xl font-medium text-neutral">Supply</div>
+          <div className="text-2xl font-medium text-accent">Supply</div>
           {totalSupply ? <div> {formatEther(totalSupply)} </div> : <div>0</div>}
         </div>
       </div>
 
       {/* ---- Funding Phase --- */}
       {!isInsuring && (
-        <div className="card w-96 bg-base-100 shadow-xl m-4">
+        <div className="card w-96 bg-base-100 shadow-xl shadow-neutral m-4">
           <div className="card-body">
-            <h2 className="card-title self-center">Buy Tokens!</h2>
+            <h2 className="card-title self-center text-primary text-3xl">Buy Tokens!</h2>
             <p>Invest in this contract and secure a steady commission from premium collections by insurers.</p>
             <div className="card-actions justify-center align-center">
               <input
@@ -169,7 +169,11 @@ const page: NextPage = () => {
                 value={inputValue}
                 onChange={handleInputChange}
               />
-              <button className="btn btn-block" onClick={handleBuyClick} disabled={isMining || isPending}>
+              <button
+                className="btn btn-block btn-outline btn-primary"
+                onClick={handleBuyClick}
+                disabled={isMining || isPending}
+              >
                 Buy Now
               </button>
             </div>
