@@ -3,6 +3,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import PayPremium from "./PayPremium";
+import RegisterCoverage from "./RegisterCoverage";
 import { NextPage } from "next";
 import { formatEther, parseEther } from "viem";
 import { useBalance, useReadContract } from "wagmi";
@@ -13,6 +14,7 @@ const page: NextPage = () => {
   const params = useParams<{ address: string }>();
   const [insuranceAddress, setInsuranceAddress] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [isInsuring, setIsInsuring] = useState(false);
 
   const {
     data: threshold,
@@ -71,6 +73,14 @@ const page: NextPage = () => {
   }, []);
 
   useEffect(() => {
+    if (balance && threshold) {
+      if (balance.value >= threshold) {
+        setIsInsuring(true);
+      }
+    }
+  }, [balance]);
+
+  useEffect(() => {
     const refetchSupply = async () => {
       await refetch();
     };
@@ -107,7 +117,7 @@ const page: NextPage = () => {
 
         <div className="stat place-items-center">
           <div className="stat-title">Phase</div>
-          {threshold && balance?.value! > threshold ? (
+          {threshold && balance?.value! >= threshold ? (
             <div className="stat-value text-secondary">Insuring</div>
           ) : (
             <div className="stat-value text-secondary">Funding</div>
@@ -144,24 +154,28 @@ const page: NextPage = () => {
 
       {/* This should be dynamically rendered, depends whether is it Funding or Investing phase*/}
       {/* ---- Funding --- */}
-      <div className="card w-96 bg-base-100 shadow-xl m-4">
-        <div className="card-body">
-          <h2 className="card-title self-center">Buy Tokens!</h2>
-          <p>Invest in this contract and secure a steady commission from premium collections by insurers.</p>
-          <div className="card-actions justify-center align-center">
-            <input
-              type="number"
-              placeholder="Amount in ETH"
-              className="input input-bordered input-sm w-full max-w-xs"
-              value={inputValue}
-              onChange={handleInputChange}
-            />
-            <button className="btn btn-block" onClick={handleBuyClick} disabled={isMining || isPending}>
-              Buy Now
-            </button>
+      {isInsuring ? (
+        <RegisterCoverage />
+      ) : (
+        <div className="card w-96 bg-base-100 shadow-xl m-4">
+          <div className="card-body">
+            <h2 className="card-title self-center">Buy Tokens!</h2>
+            <p>Invest in this contract and secure a steady commission from premium collections by insurers.</p>
+            <div className="card-actions justify-center align-center">
+              <input
+                type="number"
+                placeholder="Amount in ETH"
+                className="input input-bordered input-sm w-full max-w-xs"
+                value={inputValue}
+                onChange={handleInputChange}
+              />
+              <button className="btn btn-block" onClick={handleBuyClick} disabled={isMining || isPending}>
+                Buy Now
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ---- Investing ---  */}
       {/* ----> Replace w/ Form to buy coverage <---  */}
