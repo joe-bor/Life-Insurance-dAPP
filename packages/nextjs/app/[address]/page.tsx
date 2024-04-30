@@ -2,6 +2,7 @@
 
 import { ChangeEvent, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import PayPremium from "./PayPremium";
 import { NextPage } from "next";
 import { formatEther, parseEther } from "viem";
 import { useBalance, useReadContract } from "wagmi";
@@ -12,6 +13,12 @@ const page: NextPage = () => {
   const params = useParams<{ address: string }>();
   const [insuranceAddress, setInsuranceAddress] = useState("");
   const [inputValue, setInputValue] = useState("");
+
+  const {
+    data: threshold,
+    isLoading: isLoadingThreshold,
+    status,
+  } = useScaffoldReadContract({ contractName: "LifeInsurance", functionName: "THRESHOLD" });
 
   const { data: paymentTokenName } = useScaffoldReadContract({
     contractName: "LifeInsuranceToken",
@@ -64,14 +71,16 @@ const page: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    if (totalSupply) {
-      try {
-        refetch();
-      } catch (error) {
-        console.error(error);
-      }
+    const refetchSupply = async () => {
+      await refetch();
+    };
+
+    try {
+      refetchSupply();
+    } catch (error) {
+      console.error(error);
     }
-  }, [totalSupply]);
+  }, [totalSupply, balance]);
 
   const handleBuyClick = async () => {
     try {
@@ -88,17 +97,17 @@ const page: NextPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 px-10 m-4">
-      <div className="stats shadow">
+      <div className="stats shadow m-6">
         <div className="stat place-items-center">
           <div className="stat-title text-3xl">Insurance Contract Address</div>
-          <Address address={insuranceAddress} format="long" size="sm" />
+          <Address address={insuranceAddress} format="short" size="sm" />
           {/* <div className="stat-value">31K</div>
           <div className="stat-desc">From January 1st to February 1st</div> */}
         </div>
 
         <div className="stat place-items-center">
           <div className="stat-title">Phase</div>
-          {balance?.value! > parseEther("1") ? (
+          {threshold && balance?.value! > threshold ? (
             <div className="stat-value text-secondary">Insuring</div>
           ) : (
             <div className="stat-value text-secondary">Funding</div>
@@ -129,11 +138,12 @@ const page: NextPage = () => {
         <div className="divider divider-horizontal"></div>
         <div className="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center">
           <div className="text-2xl font-medium">Supply</div>
-          <div>{formatEther((totalSupply as bigint) || 0n)}</div>
+          {totalSupply ? <div> {formatEther(totalSupply)} </div> : <div>0</div>}
         </div>
       </div>
 
       {/* This should be dynamically rendered, depends whether is it Funding or Investing phase*/}
+      {/* ---- Funding --- */}
       <div className="card w-96 bg-base-100 shadow-xl m-4">
         <div className="card-body">
           <h2 className="card-title self-center">Buy Tokens!</h2>
@@ -152,6 +162,11 @@ const page: NextPage = () => {
           </div>
         </div>
       </div>
+
+      {/* ---- Investing ---  */}
+      {/* ----> Replace w/ Form to buy coverage <---  */}
+
+      <PayPremium />
     </div>
   );
 };
