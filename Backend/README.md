@@ -277,7 +277,7 @@ Age =  32n
 Smoker =  false
 Fitness Level =  8n
 Transaction hash: 0xb42b4ba25ba4d04abb418f0474ec9fd409d8b656354bb5f8a25987f74b27edb9
-Waiting for confirmations...
+Waiting for confirmations..
 Transaction confirmed
 
 ```
