@@ -19,6 +19,12 @@ contract LifeInsurance is UsingTellor {
 	uint256 public purchaseRatio = 1000;
 	uint256 public commissionCollectedTotal;
 
+
+    // testing variables only.
+    uint256 public currentTestTime;   // for testing monthly payments and etc.
+    uint256 deathTestValue;  // value of more than 0 to indicate dead just for testing purpose
+
+
 	struct Policy {
 		uint256 coverageAmount;
 		uint256 monthlyPremium;
@@ -135,6 +141,14 @@ contract LifeInsurance is UsingTellor {
 			(basePremium * ageFactor * smokerFactor * fitnessFactor) / 1000000;
 	}
 
+	function getCurrentTime() internal view returns (uint256) {
+		if (currentTestTime > 0) {
+			return currentTestTime; // means we are using test time -
+		} else {
+			return block.timestamp;
+		}
+	}
+
 	function payPremium(
 		address _policyHolder
 	) public payable whenLifeInsuranceIsReady {
@@ -142,18 +156,24 @@ contract LifeInsurance is UsingTellor {
 		require(policy.isActive, "Policy is not active");
 
 		// Calculate the number of full 30-day periods that have passed since the due date
-		uint256 periodsLate = (block.timestamp - policy.dueDate) / 30 days;
-		uint256 totalDue = periodsLate *
-			(policy.monthlyPremium + policy.lateFee);
+		// uint256 periodsLate = (block.timestamp - policy.dueDate) / 30 days;
+		uint256 periodsLate = (getCurrentTime() - policy.dueDate) / 30 days;
+		uint256 totalDue = 0;
+		if (periodsLate > 0) {
+			totalDue = periodsLate *
+				(policy.monthlyPremium + policy.lateFee);
 		// Require that the payment covers the total due (including all missed premiums and late fees)
+		} else {
+			totalDue = policy.monthlyPremium;  // no late fee
+		}
 		require(
 			msg.value >= totalDue,
 			"Incorrect premium amount including late fees"
 		);
 
 		// Calculate commissions based on the total payment
-		uint256 commission = (msg.value * COMMISSION_RATE) / 100;
-		// uint256 netPremium = msg.value - commission;
+		uint256 commission = (totalDue * COMMISSION_RATE) / 100;
+		
 		commissionCollectedTotal = commissionCollectedTotal + commission;
 
 		// Adjust the due date: advance by the number of missed periods plus one for the current payment
@@ -166,36 +186,7 @@ contract LifeInsurance is UsingTellor {
 		}
 	}
 
-	// function accumulateCommission(uint256 commission) private {
-	//     uint256 totalSupply = paymentToken.totalSupply();
-	//     require(totalSupply > 0, "No tokens issued");
-
-	//     // Increment the pending withdrawal balance for each token holder proportionally
-	//     uint256 commissionPerToken = commission / totalSupply;
-	//     address[] memory holders = getAllTokenHolders(); // Assume this function exists to retrieve all token holders
-
-	//     for (uint256 i = 0; i < holders.length; i++) {
-	//         uint256 holderBalance = paymentToken.balanceOf(holders[i]);
-	//         pendingWithdrawals[holders[i]] += commissionPerToken * holderBalance;
-	//     }
-	// }
-	// function accumulateCommission(uint256 commission) private {
-	//     uint256 totalSupply = paymentToken.totalSupply();
-	//     require(totalSupply > 0, "No tokens issued");
-
-	//     // Retrieve all token holders from the LifeInsuranceToken contract
-	//     address[] memory holders = paymentToken.getAllTokenHolders(); // Ensure this function is accessible and public
-
-	//     uint256 commissionPerToken = commission / totalSupply;
-
-	//     for (uint256 i = 0; i < holders.length; i++) {
-	//         uint256 holderBalance = paymentToken.balanceOf(holders[i]);
-	//         if (holderBalance > 0) {
-	//             uint256 holderCommission = commissionPerToken * holderBalance;
-	//             pendingWithdrawals[holders[i]] += holderCommission;
-	//         }
-	//     }
-	// }
+	
 
 	function claim() public whenLifeInsuranceIsReady {
 		Policy storage policy = policies[msg.sender];
@@ -204,6 +195,10 @@ contract LifeInsurance is UsingTellor {
 		// call oracle here - for now btc spot price
 		uint maxTime = 360 * 60 * 24 * 90;
 		uint oracleResult = (getBtcSpotPrice(maxTime)) % 2; // for now randomize it
+		if (deathTestValue > 0) {
+			// test purpose
+			oracleResult = 1;
+		}
 		require(oracleResult == 0, "Can claim only if died");
 		// now pay their coverage amount
 		payable(msg.sender).transfer(policy.coverageAmount);

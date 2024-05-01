@@ -31,6 +31,7 @@ const deployerPrivateKey = process.env.PRIVATE_KEY || "";
 const acc2PrivateKey = process.env.PRIVATE_KEY2 || "";
 const acc4PrivateKey = process.env.PRIVATE_KEY4 || "";
 const acc3PrivateKey = process.env.PRIVATE_KEY3 || "";
+const acc5PrivateKey = process.env.PRIVATE_KEY5 || "";
 
 const providerApiKey = process.env.ALCHEMY_API_KEY || "";
 
@@ -63,15 +64,15 @@ async function main() {
     transport: http(`https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`),
   });
 
-  console.log("Deployer address:", deployer.account.address);
-  const balance = await publicClient.getBalance({
-    address: deployer.account.address,
-  });
-  console.log(
-    "Deployer balance:",
-    formatEther(balance),
-    deployer.chain.nativeCurrency.symbol
-  );
+  // console.log("Deployer address:", deployer.account.address);
+  // const balance = await publicClient.getBalance({
+  //   address: deployer.account.address,
+  // });
+  // console.log(
+  //   "Deployer balance:",
+  //   formatEther(balance),
+  //   deployer.chain.nativeCurrency.symbol
+  // );
 
   const account2 = privateKeyToAccount(`0x${acc2PrivateKey}`);
   const acc2 = createWalletClient({
@@ -93,41 +94,22 @@ async function main() {
     transport: http(`https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`),
   });
 
-  // await initContracts();
-  await checkState(publicClient, acc4);
-}
-
-async function getAccounts() {
-  return await viem.getWalletClients();
-}
-
-async function getClient() {
-  return await viem.getPublicClient();
-}
-
-async function purchaseTokens(
-  acc: any,
-  account: any,
-  publicClient: any,
-  amount: bigint
-) {
-  // Purchase Tokens
-  const hash = await acc.writeContract({
-    address: LifeInsuranceContract,
-    abi: abiLI,
-    functionName: "purchaseTokens",
-    // args: [acc2.account.address],
-    // account: voterAccount,
-    account: account,
-    value: amount,
+  const account5 = privateKeyToAccount(`0x${acc5PrivateKey}`);
+  const acc5 = createWalletClient({
+    account: account5,
+    chain: sepolia,
+    transport: http(`https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`),
   });
-  console.log("Transaction hash:", hash);
-  console.log("Waiting for confirmations...");
-  const receipt = await publicClient.waitForTransactionReceipt({ hash });
-  console.log("Transaction confirmed");
+
+  // await initContracts();
+  await checkState(publicClient);
+  await getTokenHoldersInfo(publicClient, acc2, "Account 2");
+  await getTokenHoldersInfo(publicClient, acc3, "Account 3");
+  await getPolicyInfo(publicClient, acc4, "Account 4");
+  await getPolicyInfo(publicClient, acc5, "Account 5");
 }
 
-async function checkState(publicClient: any, acc: any) {
+async function checkState(publicClient: any) {
   const lifeContract = await viem.getContractAt(
     "LifeInsurance",
     LifeInsuranceContract
@@ -139,8 +121,29 @@ async function checkState(publicClient: any, acc: any) {
   console.log("Life Insurance threshold = ", threshold);
   console.log("Life Insurance threshold in ETH= ", formatEther(threshold));
 
-  // Get the balance of the contract
-  // const balance = await ethers.provider.getBalance(LifeInsuranceContract);
+  const commisionRate = await lifeContract.read.COMMISSION_RATE();
+  console.log("commisionRate % = ", commisionRate);
+
+  const currentTestTime = await lifeContract.read.currentTestTime();
+  console.log("currentTestTime = ", currentTestTime);
+
+  const deathTestValue = await lifeContract.read.deathTestValue();
+  console.log("deathTestValue = ", deathTestValue);
+
+  const commissionCollectedTotal =
+    await lifeContract.read.commissionCollectedTotal();
+  console.log("commissionCollectedTotal = ", commissionCollectedTotal);
+  console.log(
+    "commissionCollectedTotal in ETH= ",
+    formatEther(commissionCollectedTotal)
+  );
+
+  const totalTokens = await lifeContract.read.totalTokens();
+  console.log("totalTokens = ", totalTokens);
+  console.log(
+    "commissionCollectedTotal in formatted ETH= ",
+    formatEther(totalTokens)
+  );
 
   // const balanceOfLifeInsurance = await LifeInsuranceContract.;
   const balance = await publicClient.getBalance({
@@ -151,7 +154,30 @@ async function checkState(publicClient: any, acc: any) {
     "Balance of LifeInsurance address in ETH = ",
     formatEther(balance)
   );
+}
 
+async function getTokenHoldersInfo(
+  publicClient: any,
+  acc: any,
+  acctName: String
+) {
+  const tokensHolding = (await publicClient.readContract({
+    address: LifeInsuranceContract,
+    abi: abiLI,
+    functionName: "investorTokenBalance",
+    args: [acc.account.address],
+  })) as any;
+
+  console.log("Tokens for account ", acctName, " #Tokens - ", tokensHolding);
+  console.log(
+    "Tokens for account ",
+    acctName,
+    " #Tokens formatted - ",
+    formatEther(tokensHolding)
+  );
+}
+
+async function getPolicyInfo(publicClient: any, acc: any, acctName: String) {
   const policyRaw = (await publicClient.readContract({
     address: LifeInsuranceContract,
     abi: abiLI,
@@ -160,6 +186,12 @@ async function checkState(publicClient: any, acc: any) {
   })) as any;
 
   // const policy = await lifeContract.read.policies(acc.account.address);
+  console.log(
+    "policy info for account",
+    acctName,
+    " address - ",
+    acc.account.address
+  );
   console.log("policy object = ", policyRaw);
   // console.log("policy coverage = ", policy.coverageAmount);
 
@@ -170,140 +202,6 @@ async function checkState(publicClient: any, acc: any) {
     args: [acc.account.address],
   })) as any;
   console.log("policy holder info = ", policyHolderRaw);
-}
-
-// async function openBets(duration: string) {
-//   const contract = await viem.getContractAt("Lottery", contractAddress);
-//   const publicClient = await getClient();
-//   const currentBlock = await publicClient.getBlock();
-//   const timestamp = currentBlock?.timestamp ?? 0;
-//   const tx = await contract.write.openBets([timestamp + BigInt(duration)]);
-//   const receipt = await publicClient.getTransactionReceipt({ hash: tx });
-//   console.log(`Bets opened (${receipt?.transactionHash})`);
-// }
-
-async function displayBalance(index: string) {
-  const publicClient = await getClient();
-  const accounts = await getAccounts();
-  const balanceBN = await publicClient.getBalance({
-    address: accounts[Number(index)].account.address,
-  });
-  const balance = formatEther(balanceBN);
-  console.log(
-    `The account of address ${
-      accounts[Number(index)].account.address
-    } has ${balance} ETH\n`
-  );
-}
-
-async function buyTokens(index: string, amount: string) {
-  const accounts = await getAccounts();
-  const publicClient = await getClient();
-  const contract = await viem.getContractAt("Lottery", contractAddress);
-  const tx = await contract.write.purchaseTokens({
-    value: parseEther(amount) / TOKEN_RATIO,
-    account: accounts[Number(index)].account,
-  });
-  const receipt = await publicClient.getTransactionReceipt({ hash: tx });
-  console.log(`Tokens bought (${receipt?.transactionHash})\n`);
-}
-
-async function displayTokenBalance(index: string) {
-  const accounts = await getAccounts();
-  const token = await viem.getContractAt("LotteryToken", tokenAddress);
-  const balanceBN = await token.read.balanceOf([
-    accounts[Number(index)].account.address,
-  ]);
-  const balance = formatEther(balanceBN);
-  console.log(
-    `The account of address ${
-      accounts[Number(index)].account.address
-    } has ${balance} LT0\n`
-  );
-}
-
-async function bet(index: string, amount: string) {
-  const accounts = await getAccounts();
-  const publicClient = await getClient();
-  const token = await viem.getContractAt("LotteryToken", tokenAddress);
-  const contract = await viem.getContractAt("Lottery", contractAddress);
-  const allowTx = await token.write.approve([contractAddress, MAXUINT256], {
-    account: accounts[Number(index)].account,
-  });
-  await publicClient.getTransactionReceipt({ hash: allowTx });
-  const tx = await contract.write.betMany([BigInt(amount)], {
-    account: accounts[Number(index)].account,
-  });
-  const receipt = await publicClient.getTransactionReceipt({ hash: tx });
-  console.log(`Bets placed (${receipt?.transactionHash})\n`);
-}
-
-async function closeLottery() {
-  const publicClient = await getClient();
-  const contract = await viem.getContractAt("Lottery", contractAddress);
-  const tx = await contract.write.closeLottery();
-  const receipt = await publicClient.getTransactionReceipt({ hash: tx });
-  console.log(`Bets closed (${receipt?.transactionHash})\n`);
-}
-
-async function displayPrize(index: string): Promise<string> {
-  const accounts = await getAccounts();
-  const contract = await viem.getContractAt("Lottery", contractAddress);
-  const prizeBN = await contract.read.prize([
-    accounts[Number(index)].account.address,
-  ]);
-  const prize = formatEther(prizeBN);
-  console.log(
-    `The account of address ${
-      accounts[Number(index)].account.address
-    } has earned a prize of ${prize} Tokens\n`
-  );
-  return prize;
-}
-
-async function claimPrize(index: string, amount: string) {
-  const accounts = await getAccounts();
-  const publicClient = await getClient();
-  const contract = await viem.getContractAt("Lottery", contractAddress);
-  const tx = await contract.write.prizeWithdraw([parseEther(amount)], {
-    account: accounts[Number(index)].account,
-  });
-  const receipt = await publicClient.getTransactionReceipt({ hash: tx });
-  console.log(`Prize claimed (${receipt?.transactionHash})\n`);
-}
-
-async function displayOwnerPool() {
-  const contract = await viem.getContractAt("Lottery", contractAddress);
-  const balanceBN = await contract.read.ownerPool();
-  const balance = formatEther(balanceBN);
-  console.log(`The owner pool has (${balance}) Tokens \n`);
-}
-
-async function withdrawTokens(amount: string) {
-  const publicClient = await getClient();
-  const contract = await viem.getContractAt("Lottery", contractAddress);
-  const tx = await contract.write.ownerWithdraw([parseEther(amount)]);
-  const receipt = await publicClient.getTransactionReceipt({ hash: tx });
-  console.log(`Withdraw confirmed (${receipt?.transactionHash})\n`);
-}
-
-async function burnTokens(index: string, amount: string) {
-  const accounts = await getAccounts();
-  const publicClient = await getClient();
-  const token = await viem.getContractAt("LotteryToken", tokenAddress);
-  const contract = await viem.getContractAt("Lottery", contractAddress);
-  const allowTx = await token.write.approve([contractAddress, MAXUINT256], {
-    account: accounts[Number(index)].account,
-  });
-  const receiptAllow = await publicClient.getTransactionReceipt({
-    hash: allowTx,
-  });
-  console.log(`Allowance confirmed (${receiptAllow?.transactionHash})\n`);
-  const tx = await contract.write.returnTokens([parseEther(amount)], {
-    account: accounts[Number(index)].account,
-  });
-  const receipt = await publicClient.getTransactionReceipt({ hash: tx });
-  console.log(`Burn confirmed (${receipt?.transactionHash})\n`);
 }
 
 main().catch((error) => {
