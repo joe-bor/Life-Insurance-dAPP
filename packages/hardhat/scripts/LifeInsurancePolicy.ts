@@ -94,31 +94,96 @@ async function main() {
   });
 
   // open this to purchase tokens
-  await purchaseTokens(acc2, account2, publicClient, 250000000000n); // ETH =  0.00000025
-  await purchaseTokens(acc3, account3, publicClient, 10000000000000000n); // ETH = 0.1
+  // await purchaseTokens(acc2, account2, publicClient, 250000000000n); // ETH =  0.00000025
+  // await purchaseTokens(acc3, account3, publicClient, 10000000000000000n); // ETH = 0.1
   // await purchaseTokens(acc4, account4, publicClient, 250000000000n); // ETH = 0.1
+
+  // createPolicy(address _policyHolder, uint256 _coverageAmount, uint _age, bool _smoker, uint _fitnessScore)
+
+  await createPolicy(
+    acc4,
+    account4,
+    publicClient,
+    3000000000000000n,
+    52n, // Age
+    false, // Smoker
+    5n // Fitness level 1-10
+  ); // 0.003 Eth
+
+  // await initContracts();
+  await checkState(publicClient);
 }
 
-async function purchaseTokens(
-  acc: any,
-  account: any,
-  publicClient: any,
-  amount: bigint
+// async function getAccounts() {
+//   return await viem.getWalletClients();
+// }
+
+// async function getClient() {
+//   return await viem.getPublicClient();
+// }
+
+async function createPolicy(
+  _acc: any,
+  _account: any,
+  _publicClient: any,
+  amount: bigint,
+  age: bigint,
+  smoker: boolean,
+  fitness: bigint
 ) {
-  // Purchase Tokens
-  const hash = await acc.writeContract({
+  console.log(
+    "Create Policy - Account that's creating - ",
+    _acc.account.address
+  );
+  console.log("Coverage amount = ", amount);
+  console.log("Age = ", age);
+  console.log("Smoker = ", smoker);
+  console.log("Fitness Level = ", fitness);
+
+  const hash = await _acc.writeContract({
     address: LifeInsuranceContract,
     abi: abiLI,
-    functionName: "purchaseTokens",
-    // args: [acc2.account.address],
+    functionName: "createPolicy",
+    args: [_acc.account.address, amount, age, smoker, fitness],
     // account: voterAccount,
-    account: account,
-    value: amount,
+    account: _account,
+    // value: amount,     // creatPolicy we are not sending any value to contract yet
   });
   console.log("Transaction hash:", hash);
   console.log("Waiting for confirmations...");
-  const receipt = await publicClient.waitForTransactionReceipt({ hash });
+  const receipt = await _publicClient.waitForTransactionReceipt({ hash });
   console.log("Transaction confirmed");
+}
+
+async function checkState(publicClient: any) {
+  const lifeContract = await viem.getContractAt(
+    "LifeInsurance",
+    LifeInsuranceContract
+  );
+  const paymentTokenAddress = await lifeContract.read.paymentToken();
+  console.log("Life Insurance Token address = ", paymentTokenAddress);
+
+  const threshold = await lifeContract.read.THRESHOLD();
+  console.log("Life Insurance threshold = ", threshold);
+  console.log("Life Insurance threshold in ETH= ", formatEther(threshold));
+
+  // Get the balance of the contract
+  // const balance = await ethers.provider.getBalance(LifeInsuranceContract);
+
+  // const balanceOfLifeInsurance = await LifeInsuranceContract.;
+  const balance = await publicClient.getBalance({
+    address: LifeInsuranceContract,
+  });
+  console.log("Balance of LifeInsurance address = ", balance);
+  console.log(
+    "Balance of LifeInsurance address in ETH = ",
+    formatEther(balance)
+  );
+  if (balance < threshold) {
+    console.log("Balance is LESS than Threshold");
+  } else {
+    console.log("Balance is MORE than Threshold");
+  }
 }
 
 main().catch((error) => {

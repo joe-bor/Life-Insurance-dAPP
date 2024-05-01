@@ -91,58 +91,32 @@ async function main() {
     transport: http(`https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`),
   });
 
-  await createPolicy(
-    acc4,
-    account4,
-    publicClient,
-    3000000000000000n,
-    52n, // Age
-    false, // Smoker
-    5n // Fitness level 1-10
-  ); // 0.003 Eth
+  // await payPremium(acc4, account4, publicClient, 12144000000000n);
+  await payPremium(acc5, account5, publicClient, 15766666666665n);
+}
 
-  await createPolicy(
-    acc5,
-    account5,
-    publicClient,
-    5000000000000000n,
-    32n, // Age
-    false, // Smoker
-    8n // Fitness level 1-10
-  ); // 0.005 Eth
+async function payPremium(
+  _acc: any,
+  _account: any,
+  _publicClient: any,
+  amount: bigint
+) {
+  console.log("Account that's paying premium - ", _acc.account.address);
+  console.log("Premium amount = ", amount);
 
-  async function createPolicy(
-    _acc: any,
-    _account: any,
-    _publicClient: any,
-    amount: bigint,
-    age: bigint,
-    smoker: boolean,
-    fitness: bigint
-  ) {
-    console.log(
-      "Create Policy - Account that's creating - ",
-      _acc.account.address
-    );
-    console.log("Coverage amount = ", amount);
-    console.log("Age = ", age);
-    console.log("Smoker = ", smoker);
-    console.log("Fitness Level = ", fitness);
-
-    const hash = await _acc.writeContract({
-      address: LifeInsuranceContract,
-      abi: abiLI,
-      functionName: "createPolicy",
-      args: [_acc.account.address, amount, age, smoker, fitness],
-      // account: voterAccount,
-      account: _account,
-      // value: amount,     // creatPolicy we are not sending any value to contract yet
-    });
-    console.log("Transaction hash:", hash);
-    console.log("Waiting for confirmations...");
-    const receipt = await _publicClient.waitForTransactionReceipt({ hash });
-    console.log("Transaction confirmed");
-  }
+  const hash = await _acc.writeContract({
+    address: LifeInsuranceContract,
+    abi: abiLI,
+    functionName: "payPremium",
+    args: [_acc.account.address],
+    // account: voterAccount,
+    account: _account,
+    value: amount, // creatPolicy we are not sending any value to contract yet
+  });
+  console.log("Transaction hash:", hash);
+  console.log("Waiting for confirmations...");
+  const receipt = await _publicClient.waitForTransactionReceipt({ hash });
+  console.log("Transaction confirmed");
 }
 
 main().catch((error) => {
