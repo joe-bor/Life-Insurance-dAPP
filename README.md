@@ -1,21 +1,10 @@
-# 🏗 Scaffold-ETH 2
+# Life Insurance Smart Contract
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+<p align="center">
+  <img src="./Backend/Images/image-20240430202649667.png" alt="Life Insurance Smart Contract">
+</p>
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
-
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
-
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
-
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+This Ethereum smart contract, created by Group 1 of the Encode bootcamp, is designed for a life insurance platform. It leverages the OpenZeppelin library for ERC20 token functionality and integrates with the UsingTellor oracle to fetch external data.
 
 ## Requirements
 
@@ -27,53 +16,55 @@ Before you begin, you need to install the following tools:
 
 ## Quickstart
 
-To get started with Scaffold-ETH 2, follow the steps below:
+To get started with the project, follow the steps below:
 
-1. Install dependencies if it was skipped in CLI:
+1. Clone the Repository and Install Dependencies:
+   First, clone the repository and move into the project directory:
 
-```
-cd my-dapp-example
+```bash
+git clone https://github.com/joe-bor/Life-Insurance-dAPP.git
+cd Life-Insurance-dAPP
 yarn install
 ```
 
 2. Run a local network in the first terminal:
 
-```
+```bash
 yarn chain
 ```
 
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `packages/hardhat/hardhat.config.ts`.
-
 3. On a second terminal, deploy the test contract:
 
-```
+```bash
 yarn deploy
+# This line is a comment: Copy the address at which the `LifeInsurance` contract is deployed.
+# This will replace {contract-address} on step# 4
 ```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
 
 4. On a third terminal, start your NextJS app:
 
-```
+```bash
 yarn start
 ```
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+After starting your app, visit http://localhost:3000/{contract-address} in your browser, replacing {contract-address} with the actual address where the LifeInsurance contract was deployed. <br>
+Example: http://localhost:3000/0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
 
-Run smart contract test with `yarn hardhat:test`
+---
 
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/hardhat/deploy`
+## Key Features
 
-## Documentation
+- **Token-Based Payments**: The contract uses a custom ERC20 token, `LifeInsuranceToken`, for handling initial seed investment and then commission payments for the investors. Users pay premiums in `ETH`.
+- **Policy Management**: Users can create life insurance policies specifying coverage amount and personal health data. Premiums are due monthly, with a late fee applied for overdue payments.
+- **Commission System**: The contract collects a `1% commission` on transactions, which is stored and can be claimed by investors based on their token holdings.
+- **Oracle Integration**: Uses the `Tellor oracle` for external data, primarily to validate claims through external conditions (e.g., `BTC` spot price as a placeholder for test scenarios). But later will be converted to actual Death info as Oracles from valid government data reporting.
+- **Claim Processing**: Policyholders can claim their coverage amount upon meeting certain conditions verified through the oracle. The contract ensures funds are available and adjusts policy status accordingly.
+- **Investment Opportunity**: Allows users to invest in the insurance pool by purchasing tokens. It includes functionality to handle investments, token minting, and returns.
+- **Testing and Time Management**: Includes mechanisms to manipulate and test time-dependent features such as monthly payments and trigger death info so claims can be paid for testing.
 
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
+## Security and Usability Features
 
-To know more about its features, check out our [website](https://scaffoldeth.io).
+- **Policy Termination**: Policyholders may terminate their policies at any time.
+- **Token Purchase and Return**: Participants can buy insurance tokens with `ETH` and return tokens to reclaim `ETH`, subject to contract thresholds and conditions.
 
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+The contract is robust, with modular features for scalability and updates, aiming to provide a reliable and user-friendly platform for life insurance management on the blockchain.
