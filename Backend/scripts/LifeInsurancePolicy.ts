@@ -4,16 +4,16 @@ import { sepolia } from "viem/chains";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-// Import ethers from Hardhat package
-const { ethers } = require("hardhat");
+// // Import ethers from Hardhat package
+// const { ethers } = require("hardhat");
 
 import {
   abi as abiT,
-  bytecode as bytecodeT,
+  // bytecode as bytecodeT,
 } from "../artifacts/contracts/LifeInsuranceToken.sol/LifeInsuranceToken.json";
 import {
   abi as abiLI,
-  bytecode as bytecodeLI,
+  // bytecode as bytecodeLI,
 } from "../artifacts/contracts/LifeInsurance.sol/LifeInsurance.json";
 
 import {
