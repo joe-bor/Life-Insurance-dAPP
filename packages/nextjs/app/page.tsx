@@ -146,12 +146,6 @@ const Home: NextPage = () => {
                   <span>Basic support</span>
                 </li>
               </ul>
-              <a
-                href="#"
-                className="block w-full py-3 px-6 text-center rounded-md text-white font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-              >
-                Sign Up
-              </a>
             </div>
 
             {/* <!-- Silver Plan --> */}
